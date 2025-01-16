@@ -1,2 +1,0 @@
-npm install eslint eslint-config-airbnb-base eslint-plugin-import lint nodemon --save-dev
-npm install @hapi/hapi dotenv joi nanoid node-pg-migrate-pg
