@@ -30,7 +30,24 @@ entity "Authentications" as authentications {
   * token : TEXT
 }
 
+entity "Playlists" as playlists {
+  * id : VARCHAR(50)
+  --
+  * name : TEXT
+  * owner : VARCHAR(50)
+}
+
+entity "Playlist_Songs" as playlist_songs {
+  * id : VARCHAR(50)
+  --
+  * playlistId : VARCHAR(50)
+  * songId : VARCHAR(50)
+}
+
 songs }o--|| albums : "belongs to"
 songs }o--|| users : "owned by"
 users ||--o{ authentications : "has"
+playlists }o--|| users : "owned by"
+playlist_songs }o--|| playlists : "contains"
+playlist_songs }o--|| songs : "contains"
 @enduml
