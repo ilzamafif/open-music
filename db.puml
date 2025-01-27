@@ -44,10 +44,32 @@ entity "Playlist_Songs" as playlist_songs {
   * songId : VARCHAR(50)
 }
 
+entity "Playlist_Activities" as playlist_activities {
+  * id : VARCHAR(50)
+  --
+  * playlist_id : VARCHAR(50)
+  * song_id : VARCHAR(50)
+  * user_id : VARCHAR(50)
+  * action : VARCHAR(10)
+  * time : VARCHAR(50)
+}
+
+entity "Collaborations" as collaborations {
+  * id : VARCHAR(50)
+  --
+  * playlist_id : VARCHAR(50)
+  * user_id : VARCHAR(50)
+}
+
 songs }o--|| albums : "belongs to"
 songs }o--|| users : "owned by"
 users ||--o{ authentications : "has"
 playlists }o--|| users : "owned by"
 playlist_songs }o--|| playlists : "contains"
 playlist_songs }o--|| songs : "contains"
+playlist_activities }o--|| playlists : "related to"
+playlist_activities }o--|| songs : "related to"
+playlist_activities }o--|| users : "performed by"
+collaborations }o--|| playlists : "related to"
+collaborations }o--|| users : "involves"
 @enduml
