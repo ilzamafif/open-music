@@ -1,5 +1,4 @@
 const { Pool } = require('pg');
-const { nanoid } = require('nanoid');
 const bcrypt = require('bcrypt');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
@@ -26,6 +25,7 @@ class UsersService {
   async addUser({ username, password, fullname }) {
     await this.verifyNewUsername(username);
 
+    const { nanoid } = await import('nanoid');
     const id = `user-${nanoid(16)}`;
     const hashedPassword = await bcrypt.hash(password, 10);
     const query = {
@@ -69,6 +69,7 @@ class UsersService {
     }
 
     const { id, password: hashedPassword } = result.rows[0];
+
     const match = await bcrypt.compare(password, hashedPassword);
 
     if (!match) {
