@@ -24,9 +24,10 @@ class SongsService {
 
     return fetch.rows[0].id;
   }
+
   async getSongs(params) {
     const query = {
-      text: 'SELECT id, title, performer FROM songs'
+      text: 'SELECT id, title, performer FROM songs',
     };
     const fetch = await this._pool.query(query);
     const songs = fetch.rows;
@@ -44,15 +45,17 @@ class SongsService {
   async getSongById(id) {
     const query = {
       text: 'SELECT * FROM songs WHERE id = $1',
-      values: [id]
+      values: [id],
     };
     const fetch = await this._pool.query(query);
 
     if (!fetch.rows.length) {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
+
     return fetch.rows.map(mapSongDB)[0];
   }
+
 
   async editSongById(id, { title, year, performer, genre, duration }) {
     const query = {

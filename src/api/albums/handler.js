@@ -1,7 +1,7 @@
 const ClientError = require("../../exceptions/ClientError");
 
 class AlbumsHandler {
-  constructor(service,validator) {
+  constructor(service, validator) {
     this._service = service;
     this._validator = validator;
 
@@ -12,11 +12,11 @@ class AlbumsHandler {
     this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
   }
 
-  async postAlbumHandler(request,h) {
+  async postAlbumHandler(request, h) {
     try {
       this._validator.validateAlbumPayload(request.payload);
-      const { name,year } = request.payload;
-      const albumId = await this._service.addAlbum({ name,year });
+      const { name, year } = request.payload;
+      const albumId = await this._service.addAlbum({ name, year });
 
       const response = h.response({
         status: 'success',
@@ -24,7 +24,7 @@ class AlbumsHandler {
         data: {
           albumId,
         },
-      }, );
+      },);
       response.code(201);
       return response;
     } catch (error) {
@@ -33,8 +33,8 @@ class AlbumsHandler {
         const response = h.response({
           status: 'fail',
           message: error.message,
-        }, );
-        response.code(error.statusCode, );
+        },);
+        response.code(error.statusCode,);
         return response;
       }
 
@@ -42,7 +42,7 @@ class AlbumsHandler {
       const response = h.response({
         status: 'error',
         message: 'Maaf, terjadi kegagalan pada server kami.',
-      }, );
+      },);
       response.code(500);
       console.error(error);
       return response;
@@ -66,8 +66,8 @@ class AlbumsHandler {
         const response = h.response({
           status: 'fail',
           message: error.message,
-        }, );
-        response.code(error.statusCode, );
+        },);
+        response.code(error.statusCode,);
         return response;
       }
 
@@ -75,7 +75,7 @@ class AlbumsHandler {
       const response = h.response({
         status: 'error',
         message: 'Maaf, terjadi kegagalan pada server kami.',
-      }, );
+      },);
       response.code(500);
       console.error(error);
       return response;
@@ -88,7 +88,7 @@ class AlbumsHandler {
         id,
       } = request.params;
 
-      await this._service.editAlbumById(id, request.payload, );
+      await this._service.editAlbumById(id, request.payload,);
 
       return {
         status: 'success',
@@ -99,8 +99,8 @@ class AlbumsHandler {
         const response = h.response({
           status: 'fail',
           message: error.message,
-        }, );
-        response.code(error.statusCode, );
+        },);
+        response.code(error.statusCode,);
         return response;
       }
 
@@ -108,7 +108,7 @@ class AlbumsHandler {
       const response = h.response({
         status: 'error',
         message: 'Maaf, terjadi kegagalan pada server kami.',
-      }, );
+      },);
       response.code(500);
       console.error(error);
       return response;
@@ -131,7 +131,7 @@ class AlbumsHandler {
         const response = h.response({
           status: 'fail',
           message: error.message,
-        }, );
+        },);
         response.code(error.statusCode);
         return response;
       }
@@ -140,7 +140,7 @@ class AlbumsHandler {
       const response = h.response({
         status: 'error',
         message: 'Maaf, terjadi kegagalan pada server kami.',
-      }, );
+      },);
       response.code(500);
       console.error(error);
       return response;

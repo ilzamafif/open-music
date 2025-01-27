@@ -1,0 +1,36 @@
+@startuml
+entity "Users" as users {
+  * id : VARCHAR(50)
+  --
+  * username : VARCHAR(50)
+  * password : TEXT
+  * fullname : TEXT
+}
+
+entity "Songs" as songs {
+  * id : VARCHAR(50)
+  --
+  * title : TEXT
+  * year : INT
+  * performer : TEXT
+  * genre : TEXT
+  * duration : INT
+  * albumId : VARCHAR(50)
+  * owner : VARCHAR(50)
+}
+
+entity "Albums" as albums {
+  * id : VARCHAR(50)
+  --
+  * name : TEXT
+  * year : INTEGER
+}
+
+entity "Authentications" as authentications {
+  * token : TEXT
+}
+
+songs }o--|| albums : "belongs to"
+songs }o--|| users : "owned by"
+users ||--o{ authentications : "has"
+@enduml
