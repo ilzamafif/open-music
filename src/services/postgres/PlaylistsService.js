@@ -168,7 +168,7 @@ class PlaylistsService {
 
     const resultUser = await this._pool.query(queryUser);
     const username = resultUser.rows[0].username;
-
+    const { nanoid } = await import('nanoid');
     const idActivities = 'activity-' + nanoid(16);
     const timeActivity = new Date().toISOString();
 
@@ -196,6 +196,7 @@ class PlaylistsService {
 
     const resultUser = await this._pool.query(queryUser);
     const username = resultUser.rows[0].username;
+    const { nanoid } = await import('nanoid');
 
     const idActivities = 'activity-' + nanoid(16);
     const timeActivity = new Date().toISOString();
