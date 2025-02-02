@@ -1,6 +1,6 @@
 const path = require('path');
-const routes = (handler) => [
-  {
+
+const routes = (handler) => [{
     method: 'POST',
     path: '/albums',
     handler: handler.postAlbumHandler,
@@ -20,7 +20,6 @@ const routes = (handler) => [
     path: '/albums/{id}',
     handler: handler.deleteAlbumByIdHandler,
   },
-
   {
     method: 'POST',
     path: '/albums/{id}/covers',
@@ -55,7 +54,7 @@ const routes = (handler) => [
     method: 'GET',
     path: '/albums/{id}/likes',
     handler: handler.getAlbumLikesHandler
-  }
+  },
 ];
 
 module.exports = routes;
