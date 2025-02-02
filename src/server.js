@@ -2,6 +2,9 @@ require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
+const path = require('path');
+
+const ClientError = require('./exceptions/ClientError');
 
 const songs = require('./api/songs');
 const SongsService = require('./services/postgres/SongsService');
@@ -25,14 +28,17 @@ const AuthenticationsValidator = require("./validator/authentications");
 // playlists
 const playlists = require("./api/playlists");
 const PlaylistsService = require("./services/postgres/PlaylistsService");
-const PlaylistsValidator = require("./validator/playlists"); 
+const PlaylistsValidator = require("./validator/playlists");
 
 // collaborations
 const collaborations = require("./api/collaborations");
 const CollaborationsService = require("./services/postgres/CollaborationsService");
 const CollaborationsValidator = require("./validator/collaborations");
 
-const ClientError = require('./exceptions/ClientError');
+// Exports
+const _exports = require('./api/exports');
+const ProducerService = require('./services/rabbitmq/ProducerService');
+const ExportsValidator = require('./validator/exports');
 
 const init = async () => {
   const collaborationsService = new CollaborationsService();
@@ -118,9 +124,17 @@ const init = async () => {
     {
       plugin: collaborations,
       options: {
-        collaborationsService,
         playlistsService,
+        collaborationsService,
         validator: CollaborationsValidator,
+      },
+    },
+    {
+      plugin: _exports,
+      options: {
+        service: ProducerService,
+        validator: ExportsValidator,
+        playlistsService,
       },
     },
   ]);

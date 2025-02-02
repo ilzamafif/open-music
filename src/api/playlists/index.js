@@ -8,7 +8,7 @@ module.exports = {
     service,
     validator
   }) => {
-    const playlistsapiHandler = new PlaylistsHandler(service, validator);
-    server.route(routes(playlistsapiHandler));
+    const playlistsApiHandler = new PlaylistsHandler(service, validator);
+    server.route(routes(playlistsApiHandler));
   },
 };
