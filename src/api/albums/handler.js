@@ -10,14 +10,14 @@ class AlbumsHandler {
 
     this._storageService = storageService;
     this.postUploadCoverHandler = this.postUploadCoverHandler.bind(this);
-    this.postAlbumLikeHandler = this.postAlbumLikeHandler.bind(this);
-    this.getAlbumLikesHandler = this.getAlbumLikesHandler.bind(this);
+    this.getUserAlbumLikesByIdHandler = this.getUserAlbumLikesByIdHandler.bind(this);
+    this.postUserAlbumLikesHandler = this.postUserAlbumLikesHandler.bind(this);
+    this.deleteUserAlbumLikesHandler = this.deleteUserAlbumLikesHandler.bind(this);
   }
-
-  async postAlbumHandler(request,h) {
+  async postAlbumHandler(request, h) {
     this._validator.validateAlbumPayload(request.payload);
 
-    const { name,year } = request.payload;
+    const { name, year } = request.payload;
     const albumId = await this._service.addAlbum({ name, year });
 
     const response = h.response({
@@ -26,12 +26,12 @@ class AlbumsHandler {
       data: {
         albumId,
       },
-    }, );
+    },);
     response.code(201);
     return response;
   }
 
-  async getAlbumByIdHandler(request,h) {
+  async getAlbumByIdHandler(request, h) {
     const { id } = request.params;
     const album = await this._service.getAlbumById(id);
     const response = h.response({
@@ -46,7 +46,7 @@ class AlbumsHandler {
     }
     return response;
   }
-  async putAlbumByIdHandler(request,h) {
+  async putAlbumByIdHandler(request, h) {
     this._validator.validateAlbumPayload(request.payload);
 
     const { id } = request.params;
@@ -71,8 +71,7 @@ class AlbumsHandler {
     };
   }
 
-  // cover album
-  async postUploadCoverHandler(request,h) {
+  async postUploadCoverHandler(request, h) {
     const { cover } = request.payload;
     const { id } = request.params;
     this._validator.validateAlbumCover(cover.hapi.headers);
@@ -92,37 +91,58 @@ class AlbumsHandler {
   }
 
   // like
-  async postAlbumLikeHandler(request,h) {
-    const { id: credentialId } = request.auth.credentials;
-    const { id: albumId } = request.params;
+  async getUserAlbumLikesByIdHandler(request, h) {
+    const { id } = request.params;
 
-    const message = await this._service.postUserAlbumLikeById(credentialId, albumId);
-
-    const response = h.response({
-      status: 'success',
-      message: message
-    });
-
-    response.code(201);
-    return response;
-  }
-
-  async getAlbumLikesHandler(request, h) {
-    const { id: albumId } = request.params;
-    const likes = await this._service.getUserAlbumLikesById(albumId);
+    const albumLikeData = await this._service.getAlbumLikesByAlbumId(id);
 
     const response = h.response({
       status: 'success',
       data: {
-        likes: likes.albumLikes
-      }
+        likes: albumLikeData.data,
+      },
     });
-    if (likes.source === 'cache') {
+    if (albumLikeData.source === 'cache') {
       response.header('X-Data-Source', 'cache');
-      return response;
     }
+    response.code(200);
     return response;
   }
+
+  async postUserAlbumLikesHandler(request, h) {
+    const { id: credentialId } = request.auth.credentials;
+    const { id: albumId } = request.params;
+
+    await this._service.getAlbumById(albumId);
+
+    const likesId = await this._service.addAlbumLikes(
+      albumId,
+      credentialId
+    );
+
+    const response = h.response({
+      status: 'success',
+      message: 'Likes berhasil ditambahkan',
+      data: {
+        likesId,
+      },
+    });
+    response.code(201);
+    return response;
+  }
+
+  async deleteUserAlbumLikesHandler(request) {
+    const { id: credentialId } = request.auth.credentials;
+    const { id: albumId } = request.params;
+
+    await this._service.deleteAlbumLikes(credentialId, albumId);
+
+    return {
+      status: 'success',
+      message: 'Likes berhasil dihapus',
+    };
+  }
+
 }
 
 module.exports = AlbumsHandler;

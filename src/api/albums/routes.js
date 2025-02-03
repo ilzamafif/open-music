@@ -1,6 +1,7 @@
 const path = require('path');
 
-const routes = (handler) => [{
+const routes = (handler) => [
+  {
     method: 'POST',
     path: '/albums',
     handler: handler.postAlbumHandler,
@@ -43,17 +44,27 @@ const routes = (handler) => [{
     }
   },
   {
-    method: 'POST',
-    path: '/albums/{id}/likes',
-    handler: handler.postAlbumLikeHandler,
-    options: {
-      auth: 'songsapp_jwt'
-    }
-  },
-  {
     method: 'GET',
     path: '/albums/{id}/likes',
-    handler: handler.getAlbumLikesHandler
+    handler: (request, h) =>
+      handler.getUserAlbumLikesByIdHandler(request, h),
+  },
+  {
+    method: 'POST',
+    path: '/albums/{id}/likes',
+    handler: (request, h) => handler.postUserAlbumLikesHandler(request, h),
+    options: {
+      auth: 'songsapp_jwt',
+    },
+  },
+  {
+    method: 'DELETE',
+    path: '/albums/{id}/likes',
+    handler: (request, h) =>
+      handler.deleteUserAlbumLikesHandler(request, h),
+    options: {
+      auth: 'songsapp_jwt',
+    },
   },
 ];
 
